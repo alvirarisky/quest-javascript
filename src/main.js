@@ -198,7 +198,7 @@ function landing() {
 }
 function identity() {
   shell(
-    `<div class="panel registration"><div class="panel-top"><span>PERSONNEL TERMINAL</span><span>NULL-07</span></div><h2>Data operator.</h2><form id="identity"><label>Nama Lengkap<input name="name" required maxlength="80" autocomplete="name" placeholder="Nama lengkap"></label><div class="form-row"><label>NIM<input name="nim" required maxlength="80" placeholder="Nomor induk mahasiswa"></label><label>Kelas<input name="kelas" required maxlength="80" placeholder="Contoh: TI-2A"></label></div><p id="error" role="alert"></p><button class="primary" type="submit">MASUK <span>→</span></button></form><button class="text-button" id="back">← KEMBALI</button><div class="fine">Jawaban pertama dinilai. Jawaban salah tetap bisa diperbaiki.</div></div>`,
+    `<div class="panel registration"><div class="panel-top"><span>PERSONNEL TERMINAL</span><span>NULL-07</span></div><h2>Data operator.</h2><form id="identity"><label>Nama Lengkap<input name="name" required maxlength="80" autocomplete="name" placeholder="Nama lengkap"></label><div class="form-row"><label>NIM<input name="nim" required maxlength="80" placeholder="Nomor induk mahasiswa"></label><label>Kelas<input name="kelas" required maxlength="80" placeholder="Contoh: TI-24-XX"></label></div><p id="error" role="alert"></p><button class="primary" type="submit">MASUK <span>→</span></button></form><button class="text-button" id="back">← KEMBALI</button><div class="fine">Jawaban pertama dinilai. Jawaban salah tetap bisa diperbaiki.</div></div>`,
   );
   document.querySelector("#back").onclick = landing;
   document.querySelector("#identity").onsubmit = (e) => {

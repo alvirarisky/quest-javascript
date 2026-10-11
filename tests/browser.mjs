@@ -25,7 +25,7 @@ await page.click("#brief-next");
 await page.screenshot({ path: "/tmp/null07-identity.png" });
 await page.fill("[name=name]", "Alvira Test");
 await page.fill("[name=nim]", "123456");
-await page.fill("[name=kelas]", "TI-2A");
+await page.fill("[name=kelas]", "TI-24-XX");
 await page.click("button[type=submit]");
 await page.fill(
   "#essay",
