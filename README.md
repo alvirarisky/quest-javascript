@@ -29,7 +29,7 @@ Source reviewed: `../WEBPRO IT GANJIL 2025-2026 (1).pdf`, Module 6, printed page
 2. Variable Mutation: `var`, reassignment, simple arithmetic; sections 6.2.2 and 6.4.
 3. CCTV Array: zero-based indexing; section 6.2.3.
 4. Security Logic: `if/else` and `===`; section 6.2.4.
-5. Object Experiment: object literals and explicitly requested dot notation; sections 6.3.1–6.3.2. Optional unscored prototype field note follows section 6.3.3.
+5. Object Experiment: object literals and explicitly requested dot notation; sections 6.3.1–6.3.2. Assessment remains limited to the requested property access.
 6. Function Reactor: declaration and invocation; section 6.4.
 7. jQuery Control: ID selector syntax demonstrated in section 6.6.1.
 8. Final Escape: one scored selection containing `hide()`, `show()`, and `animate({height: "toggle"})`, matching sections 6.6.1–6.6.2. Actual jQuery effects demonstrate the repair.
@@ -59,3 +59,50 @@ The browser script uses Playwright with macOS Chrome by default. Set `CHROME_PAT
 Original bitmap art is in `public/assets/`, generated with the built-in imagegen tool. Environment images are scenery layers; collision, doors, lights, character, terminals, camera, interaction prompts, and progression remain actual game entities. Asset prompts are recorded in `docs/art-prompts.md`. Audio is synthesized locally through Web Audio. Google Fonts has system fallbacks if unavailable.
 
 The game is optimized for desktop. Mobile controls are provided, but a laptop is recommended for reading code. Browser rendering and local handler compatibility can be tested here; an actual Vercel deployment must still be smoke-tested on its deployed URL.
+
+## Visual revision
+
+The title screen and HUD now show only essential information. Movement guidance disappears after the first walk, room names appear briefly, and terminal instructions are condensed around the mission, code, choices, and confirmation. Result identity and grading information remain complete.
+
+Sector dimensions and terminal positions vary through `src/game/layout.js`. Original vector illustrations in `src/game/assets/illustrations.js` add textured terminals, doors, a maintenance robot, and an organic Watcher silhouette. Repairs animate doors, rotate the generator, restore actual camera images, and move the robot. Watcher events follow sector entry and selected repairs instead of a repeating timer. Puzzle/pause overlays freeze physics, scene timers, and tweens.
+
+For a second local preview alongside an existing server: `PORT=5174 npm run dev`. Browser tests accept `BASE_URL=http://127.0.0.1:5174`. `tests/visual.mjs` checks final-puzzle desktop fit and mobile controls. `tests/environment.mjs` checks hold-task pause/resume, task recovery and jumpscare preference persistence.
+
+Existing raster backgrounds are retained; some crops remain visibly softer than the character and vector props. Desktop/laptop remains the primary platform.
+
+## Aktivitas fasilitas
+
+Delapan puzzle tetap menjadi satu-satunya sumber nilai. Aktivitas dunia di antaranya mencakup mengambil kartu akses, membawa dan memasang sekring, memilih feed CCTV, menarik tuas, menahan E untuk menutup katup, mengirim robot, mengatur kanal antena, dan membuka segel EXIT. Aktivitas ini tersimpan bersama posisi pemain dan bisa dilanjutkan setelah refresh, termasuk sesudah soal terakhir sebelum keluar.
+
+Kejutan mengikuti interaksi tertentu: feed kamera yang salah, gangguan di laboratorium, dan pendekatan ke EXIT. Tidak ada pengurangan nilai atau batas waktu pada task. Pilihan **Kurangi jumpscare** tersedia di menu jeda; preferensi reduced motion juga mengurangi kejutan. Terminal dan menu jeda menghentikan dunia, termasuk animasi dan timer.
+
+## Horror gameplay QA revision
+
+The earlier environmental tasks varied the props but still relied on approaching an object and pressing E. Exploration now has a security scan with a visible safe interval, plus a Watcher patrol in Surveillance. The Watcher notices flashlight exposure, nearby sprint noise and direct contact. Turning off the light reduces visibility; holding SPACE crouches, or hides when beside a locker. SHIFT sprints with limited stamina. Hiding breaks pursuit and lets the Watcher search before returning to patrol.
+
+After opening the final seal, the player must sprint to EXIT through an extended corridor. Being caught returns the player to a safe room checkpoint; completed tasks, answers and grading tokens survive. These encounters never run while a terminal or pause menu is open. Reduced jumpscare settings suppress abrupt overlays and camera shake; they preserve the exploration rules. Touch controls also provide flashlight, hide and sprint inputs.
+
+Run `node tests/horror.mjs` to verify hiding, pursuit, capture recovery, scanner failure/safe crossing, and the final escape. `tests/browser.mjs` now follows a physical hiding route and completes the last sprint as part of the full eight-sector run.
+
+## Opening, reflection and learning report
+
+New shifts begin with a horror warning and compact controls, including optional sound and reduced jumpscares. After operator registration, players write a 20–600-character personal reflection about JavaScript responding to user actions. This is unscored and included in signed session state, resume responses, the final report, and copied results. The short opening can be skipped and is recoverable after refresh.
+
+Every incorrect first answer produces a brief terminal disturbance before the assisted repair. Reduced jumpscares or reduced motion use a static notice instead of an abrupt Watcher overlay. The game world remains paused throughout answer feedback.
+
+The final report is a single facility shift record: score, title and the original essay appear together. Eight JavaScript/jQuery learning notes with first-answer review flags expand beneath the record. Titles are Penjaga NULL-07 (8 correct), Pemulih Sistem (6–7), Operator Malam (4–5), and Penyintas Pemula (0–3). They describe the run and do not grade the essay. Legacy sessions can omit reflection.
+
+`node tests/onboarding.mjs` verifies warnings, opening recovery, reflection integrity/HTML escaping, normal/reduced wrong-answer reactions, and the combined desktop report.
+
+## Archive typography and soundscape
+
+Oswald headings and Source Sans 3 body text are bundled locally with their OFL licenses in `public/fonts/`; Google Fonts is not requested at runtime. Results use a dark industrial record, with the original essay directly under identity, score and title.
+
+`public/audio/null07-ambience.wav` is an original 48-second procedural loop (low drones, ventilation noise, distant metallic echoes), reproducible with `python3 scripts/generate-ambience.py`. Sound starts after an explicit start/continue gesture and can be disabled before the shift or through the HUD/pause menu. Volume and mute settings persist locally. Ambience fades during puzzles, pause and results; threat proximity raises its intensity. `node tests/audio.mjs` verifies decoding, playback, fade, mute, volume persistence and local fonts in Chrome.
+
+
+Horror direction uses Alien: Isolation as a reference for industrial atmosphere, anticipation and sound, with original NULL-07 artwork and characters. Reference: https://news.xbox.com/en-us/2014/10/07/games-aliens-isolation-interview/amp/
+
+Wrong answers now interrupt the terminal with a short signal failure, close-range Watcher lunge and dark aftermath. CCTV, corridor and capture scares use different anticipation delays. Movement and threat updates stop during the world scare, and opening an overlay cancels it. Reduced scares or reduced motion use the quiet feedback path. The original impact/breath sting is reproducible with `python3 scripts/generate-scare.py`, respects mute/volume, and varies its pitch slightly between attacks.
+
+Players choose Horror (full jumpscares) or Tenang (no jumpscares) in the opening guide and can change it from pause. Mode is remembered on this device; puzzles and scoring are identical in both modes.

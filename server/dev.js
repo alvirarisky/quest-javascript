@@ -2,17 +2,20 @@ import http from "node:http";
 import { randomBytes } from "node:crypto";
 import { createServer, loadEnv } from "vite";
 import { dispatch } from "./core.js";
-process.env.SESSION_SECRET ||= loadEnv(
-  "development",
-  process.cwd(),
-  "SESSION_",
-).SESSION_SECRET;
-process.env.SESSION_SECRET ||= randomBytes(32).toString("hex");
+const configuredSecret =
+  process.env.SESSION_SECRET ||
+  loadEnv("development", process.cwd(), "SESSION_").SESSION_SECRET;
+process.env.SESSION_SECRET =
+  configuredSecret || randomBytes(32).toString("hex");
+const port = Number(process.env.PORT || 5173);
 console.log(
   "Local API active. Set SESSION_SECRET for sessions that survive server restarts.",
 );
 const vite = await createServer({
-  server: { middlewareMode: true },
+  server: {
+    middlewareMode: true,
+    hmr: { port: port + 10000, host: "127.0.0.1" },
+  },
   appType: "spa",
 });
 http
@@ -47,4 +50,4 @@ http
     }
     vite.middlewares(req, res);
   })
-  .listen(5173, "127.0.0.1", () => console.log("http://127.0.0.1:5173"));
+  .listen(port, "127.0.0.1", () => console.log(`http://127.0.0.1:${port}`));

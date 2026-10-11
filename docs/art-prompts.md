@@ -8,3 +8,7 @@ Tool: built-in imagegen, not CLI. All requested assets are copied into this repo
 - Operator edit prompt: Preserve all six poses, positions and proportions; remove dark background and surrounding glows to a genuine transparent alpha cutout.
 
 No copyrighted game characters or third-party game artwork are used.
+
+
+- `public/assets/watcher-scare-v2.png`: Original close-range horror creature pressed against industrial observation glass, gaunt charcoal face, deep eyes, hand against the window, restrained warm corridor lighting, cinematic realistic texture. No gore, text, logos or copyrighted game characters. Generated through built-in imagegen and copied locally; cropped to fill the viewport during the impact.
+- `public/audio/null07-impact.wav`: Original procedural metallic slam, distorted breath and scrape; generated with Python standard-library synthesis, without third-party recordings.

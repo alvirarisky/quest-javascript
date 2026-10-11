@@ -76,3 +76,43 @@ test("stateless old tokens can replay: documented limitation", () => {
   assert.equal(a.progress, 1);
   assert.equal(b.progress, 1);
 });
+test("reflection is signed, unscored, preserved on resume and result; titles follow grade", () => {
+  const reflection =
+    "Menurut saya JavaScript merespons klik pengguna dan mengubah tampilan.";
+  for (const target of [0, 4, 6, 8]) {
+    let r = dispatch("session", {
+      name: "Test",
+      nim: "1",
+      kelas: "A",
+      reflection,
+    });
+    assert.equal(dispatch("resume", { token: r.token }).reflection, reflection);
+    for (let i = 0; i < 8; i++) {
+      const q = question(state(r), process.env.SESSION_SECRET);
+      const answer = i < target ? q.answer : (q.answer + 1) % 4;
+      r = dispatch("answer", {
+        token: r.token,
+        puzzle: i,
+        option: q.options.find((o) => o.label === q.choices[answer]).id,
+      });
+    }
+    const result = dispatch("result", { token: r.token, reflection: "forged" });
+    assert.equal(result.reflection, reflection);
+    assert.equal(result.score, (target / 8) * 100);
+    assert.equal(result.outcomes.length, 8);
+    assert.equal(
+      result.rank,
+      {
+        0: "PENYINTAS PEMULA",
+        4: "OPERATOR MALAM",
+        6: "PEMULIH SISTEM",
+        8: "PENJAGA NULL-07",
+      }[target],
+    );
+    assert.ok(result.rankDescription);
+  }
+  for (const reflection of [42, "short", "x".repeat(601)])
+    assert.throws(() =>
+      dispatch("session", { name: "Test", nim: "1", kelas: "A", reflection }),
+    );
+});

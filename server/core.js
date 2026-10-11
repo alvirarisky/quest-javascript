@@ -54,6 +54,7 @@ function packageState(s) {
     token: sign(s),
     progress: s.progress,
     identity: s.identity,
+    reflection: s.reflection || "",
     started: s.started,
     complete: s.progress === 8,
   };
@@ -79,10 +80,18 @@ export function dispatch(action, body) {
         );
       identity[key] = body[key].trim();
     }
+    const reflection = body.reflection === undefined ? "" : body.reflection;
+    if (
+      typeof reflection !== "string" ||
+      (reflection !== "" &&
+        (reflection.trim().length < 20 || reflection.length > 600))
+    )
+      throw new ApiError("Tulis refleksi pribadi sepanjang 20–600 karakter.");
     return packageState({
       v: 1,
       id: randomUUID(),
       identity,
+      reflection: reflection.trim(),
       progress: 0,
       answers: [],
       started: Date.now(),
@@ -121,6 +130,8 @@ export function dispatch(action, body) {
     const correct = s.answers.filter(Boolean).length;
     return {
       identity: s.identity,
+      reflection: s.reflection || "",
+      outcomes: s.answers,
       correct,
       total: 8,
       score: (correct / 8) * 100,
@@ -129,12 +140,20 @@ export function dispatch(action, body) {
       completed: s.completed,
       rank:
         correct === 8
-          ? "MASTER TECHNICIAN"
+          ? "PENJAGA NULL-07"
           : correct >= 6
-            ? "SYSTEM SURVIVOR"
+            ? "PEMULIH SISTEM"
             : correct >= 4
-              ? "NIGHT OPERATOR"
-              : "TRAINEE TECHNICIAN",
+              ? "OPERATOR MALAM"
+              : "PENYINTAS PEMULA",
+      rankDescription:
+        correct === 8
+          ? "Delapan sistem pulih pada percobaan pertama. Kamu membaca kode dengan cermat."
+          : correct >= 6
+            ? "Sebagian besar sistem pulih pada percobaan pertama. Tinjau kembali bagian yang sempat terganggu."
+            : correct >= 4
+              ? "Kamu menemukan jalan keluar sambil belajar dari perbaikan. Beberapa konsep masih perlu dilatih."
+              : "Kamu menyelesaikan shift dengan bantuan perbaikan. Gunakan catatan belajar untuk percobaan berikutnya.",
     };
   }
   throw new ApiError("Endpoint tidak ditemukan.", 404);

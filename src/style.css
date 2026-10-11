@@ -1,6 +1,17 @@
-@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap");
+@font-face {
+  font-family: "Oswald";
+  src: url("/fonts/oswald-variable.ttf") format("truetype");
+  font-weight: 200 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("/fonts/sourcesans3-variable.ttf") format("truetype");
+  font-weight: 200 900;
+  font-display: swap;
+}
 :root {
-  font-family: Inter, Arial, sans-serif;
+  font-family: "Source Sans 3", Arial, sans-serif;
   color: #d0dbd8;
   background: #070e12;
   font-synthesis: none;
@@ -39,7 +50,7 @@ button {
   background: #172328;
   color: #c6d3d0;
   padding: 13px 20px;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Source Sans 3", monospace;
   font-size: 11px;
   letter-spacing: 1px;
 }
@@ -105,20 +116,6 @@ input:focus-visible {
   );
   opacity: 0.7;
 }
-.topline,
-.landing-footer {
-  display: flex;
-  justify-content: space-between;
-  font:
-    10px "IBM Plex Mono",
-    monospace;
-  letter-spacing: 2px;
-  color: #8c9a9d;
-}
-.topline {
-  padding-bottom: 24px;
-  border-bottom: 1px solid #74847c28;
-}
 .landing {
   position: relative;
   margin-top: 6vh;
@@ -126,7 +123,7 @@ input:focus-visible {
 }
 .eyebrow {
   font:
-    10px "IBM Plex Mono",
+    10px "Source Sans 3",
     monospace;
   letter-spacing: 2px;
   color: #97b3a6;
@@ -141,7 +138,7 @@ input:focus-visible {
 }
 .overline {
   font:
-    500 23px "Barlow Condensed",
+    500 23px "Oswald",
     sans-serif;
   letter-spacing: 8px;
   color: #a4b9b7;
@@ -149,7 +146,7 @@ input:focus-visible {
 }
 h1 {
   font:
-    800 clamp(76px, 9.2vw, 136px)/0.87 "Barlow Condensed",
+    800 clamp(76px, 9.2vw, 136px)/0.87 "Oswald",
     "Arial Narrow",
     sans-serif;
   letter-spacing: -2px;
@@ -161,61 +158,13 @@ h1 {
 h1 span {
   color: #b1c7ac;
 }
-h1 i {
-  position: absolute;
-  font:
-    600 170px "Barlow Condensed",
-    sans-serif;
-  left: 350px;
-  top: -10px;
-  color: transparent;
-  -webkit-text-stroke: 1px #9fb4ac25;
-  font-style: normal;
-}
-.subtitle {
-  font:
-    11px "IBM Plex Mono",
-    monospace;
-  letter-spacing: 4px;
-  margin-top: 23px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.subtitle span {
-  width: 30px;
-  height: 1px;
-  background: #a3bfae;
-}
-.intro {
-  font-size: 13px;
-  line-height: 1.9;
-  color: #94a5a6;
-  margin: 24px 0;
-}
-.intro b {
-  font-weight: 400;
-  color: #c4cdc8;
-}
 .actions {
   display: flex;
   gap: 12px;
 }
-.landing-controls {
-  font:
-    9px "IBM Plex Mono",
-    monospace;
-  color: #7b8c8e;
-  margin-top: 22px;
-  letter-spacing: 1px;
-}
-.landing-controls span {
-  margin: 0 9px;
-  color: #45585b;
-}
 kbd {
   font:
-    10px "IBM Plex Mono",
+    10px "Source Sans 3",
     monospace;
   border: 1px solid #64757760;
   border-radius: 2px;
@@ -223,33 +172,8 @@ kbd {
   margin-right: 4px;
   color: #b2c3bc;
 }
-.landing-note {
-  position: absolute;
-  right: 6vw;
-  bottom: 18vh;
-  border-left: 1px solid #a2786044;
-  padding-left: 20px;
-  font:
-    10px/1.9 "IBM Plex Mono",
-    monospace;
-  letter-spacing: 1px;
-  color: #8b9c9d;
-}
 .red {
   color: var(--red);
-}
-.landing-note small {
-  font-size: 8px;
-  color: #738587;
-}
-.landing-footer {
-  position: absolute;
-  bottom: 28px;
-  left: 5.5vw;
-  right: 5.5vw;
-  border-top: 1px solid #74847c28;
-  padding-top: 20px;
-  font-size: 8px;
 }
 .panel {
   background: linear-gradient(145deg, #19272bea, #0e191df5);
@@ -266,7 +190,7 @@ kbd {
   padding-bottom: 15px;
   margin-bottom: 26px;
   font:
-    10px "IBM Plex Mono",
+    10px "Source Sans 3",
     monospace;
   letter-spacing: 1px;
   color: #8da5a1;
@@ -279,7 +203,7 @@ kbd {
 }
 .panel h2 {
   font:
-    600 44px/1.05 "Barlow Condensed",
+    600 44px/1.05 "Oswald",
     sans-serif;
   letter-spacing: 0.2px;
   margin: 12px 0 16px;
@@ -294,7 +218,7 @@ kbd {
   display: block;
   color: #a2b6b1;
   font:
-    11px "IBM Plex Mono",
+    11px "Source Sans 3",
     monospace;
   margin: 22px 0 0;
 }
@@ -332,7 +256,7 @@ kbd {
   margin-top: 22px;
   padding-top: 16px;
   font:
-    10px/1.6 "IBM Plex Mono",
+    10px/1.6 "Source Sans 3",
     monospace;
   color: #728b89;
 }
@@ -354,137 +278,18 @@ kbd {
   background: linear-gradient(#081118f0, #08111880, transparent);
   pointer-events: auto;
 }
-.brand {
-  font:
-    600 23px "Barlow Condensed",
-    sans-serif;
-  letter-spacing: 3px;
-}
-.brand span {
-  color: #adc5af;
-}
-.brand small {
-  display: block;
-  font:
-    7px "IBM Plex Mono",
-    monospace;
-  letter-spacing: 2px;
-  color: #7f9596;
-  margin-top: 4px;
-}
-.location span {
-  display: block;
-  font:
-    8px "IBM Plex Mono",
-    monospace;
-  letter-spacing: 2px;
-  color: #8faaa6;
-}
-.location strong {
-  font:
-    500 16px "Barlow Condensed",
-    sans-serif;
-  letter-spacing: 2px;
-}
 .hud-right {
   display: flex;
   align-items: center;
   gap: 15px;
   font:
-    14px "IBM Plex Mono",
+    14px "Source Sans 3",
     monospace;
 }
 .hud button {
   font-size: 8px;
   background: #0b1718aa;
   padding: 9px 12px;
-}
-.mission {
-  position: absolute;
-  top: 112px;
-  left: 32px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 15px 18px;
-  background: #0b151bdd;
-  border-left: 2px solid #987457;
-  width: 330px;
-}
-.mission small {
-  font:
-    8px "IBM Plex Mono",
-    monospace;
-  letter-spacing: 2px;
-  color: #bb8b72;
-}
-.mission p {
-  font-size: 11px;
-  margin: 7px 0 0;
-  color: #b4c7c4;
-}
-.mission b {
-  margin-left: auto;
-  font:
-    22px "Barlow Condensed",
-    sans-serif;
-}
-.mission b span {
-  font-size: 13px;
-  color: #839795;
-}
-.map {
-  position: absolute;
-  bottom: 90px;
-  right: 30px;
-  display: flex;
-  gap: 5px;
-}
-.map > span {
-  font:
-    9px "IBM Plex Mono",
-    monospace;
-  border: 1px solid #475959;
-  padding: 7px;
-  color: #758784;
-  background: #071318a0;
-}
-.map > span.done {
-  color: #b1d1b1;
-  background: #283d32;
-}
-.map > span.active {
-  border-color: #c4d7c2;
-}
-.map small {
-  position: absolute;
-  bottom: 38px;
-  right: 0;
-  white-space: nowrap;
-  font:
-    7px "IBM Plex Mono",
-    monospace;
-  letter-spacing: 2px;
-  color: #96aaa5;
-}
-.controls {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  gap: 28px;
-  padding: 22px 30px;
-  font:
-    8px "IBM Plex Mono",
-    monospace;
-  color: #a0b4ad;
-  background: linear-gradient(transparent, #071218e8);
-}
-.controls em {
-  margin-left: auto;
-  color: #7f9292;
-  font-style: normal;
 }
 .terminal {
   width: min(760px, 100%);
@@ -495,29 +300,13 @@ kbd {
 .terminal .panel-top {
   margin-bottom: 18px;
 }
-.terminal-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 .terminal h2 {
   font-size: 34px;
   margin: 10px 0 16px;
 }
-.offline {
-  font:
-    9px "IBM Plex Mono",
-    monospace;
-  color: var(--red);
-}
-.mission-copy {
-  font-size: 12px;
-  color: #b5c8c1;
-}
-.mission-copy b,
 .instruction b {
   font:
-    9px "IBM Plex Mono",
+    9px "Source Sans 3",
     monospace;
   letter-spacing: 1px;
   color: #a6c0af;
@@ -535,7 +324,7 @@ pre {
   padding: 16px 20px;
   color: #b2d7c6;
   font:
-    12px/1.65 "IBM Plex Mono",
+    12px/1.65 "Source Sans 3",
     monospace;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -587,7 +376,7 @@ fieldset {
 }
 .option code {
   font:
-    11px/1.5 "IBM Plex Mono",
+    11px/1.5 "Source Sans 3",
     monospace;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -616,11 +405,6 @@ fieldset {
 .feedback .panel-top {
   text-align: left;
 }
-.feedback-symbol {
-  display: block;
-  font-size: 40px;
-  color: #b7cead;
-}
 .feedback pre {
   text-align: left;
 }
@@ -628,15 +412,12 @@ fieldset {
   margin: 18px auto 0;
   min-width: 270px;
 }
-.world-effect {
-  color: #a8c9b2 !important;
-}
 .effect-demo {
   display: flex;
   gap: 20px;
   justify-content: center;
   font:
-    11px "IBM Plex Mono",
+    11px "Source Sans 3",
     monospace;
   border: 1px solid #40594e;
   padding: 14px;
@@ -679,7 +460,7 @@ fieldset {
   display: block;
   color: #d6e0d4;
   font:
-    500 16px Inter,
+    500 16px "Source Sans 3",
     Arial,
     sans-serif;
   margin-top: 7px;
@@ -698,14 +479,14 @@ fieldset {
 }
 .score small {
   font:
-    9px "IBM Plex Mono",
+    9px "Source Sans 3",
     monospace;
   letter-spacing: 2px;
   color: #9bb2a6;
 }
 .score strong {
   font:
-    600 96px "Barlow Condensed",
+    600 96px "Oswald",
     sans-serif;
   color: #c2d6b9;
   line-height: 1.2;
@@ -716,12 +497,12 @@ fieldset {
 }
 .score p {
   font:
-    9px "IBM Plex Mono",
+    9px "Source Sans 3",
     monospace;
 }
 .rank {
   font:
-    10px "IBM Plex Mono",
+    10px "Source Sans 3",
     monospace;
   color: #b5cbb4;
   padding: 10px 0;
@@ -749,7 +530,7 @@ fieldset {
   padding: 15px 22px;
   color: #d0dfd3;
   font:
-    12px/1.5 "IBM Plex Mono",
+    12px/1.5 "Source Sans 3",
     monospace;
   text-align: center;
 }
@@ -770,9 +551,6 @@ fieldset {
   }
   .overline {
     margin-top: 22px;
-  }
-  .intro {
-    margin: 20px 0;
   }
   .panel {
     padding: 24px;
@@ -808,13 +586,6 @@ fieldset {
   .landing-veil {
     padding: 22px;
   }
-  .topline {
-    font-size: 7px;
-    letter-spacing: 1px;
-  }
-  .topline span:last-child {
-    display: none;
-  }
   .landing {
     margin-top: 7vh;
   }
@@ -822,28 +593,8 @@ fieldset {
     font-size: 90px;
     width: 330px;
   }
-  h1 i {
-    left: 230px;
-    font-size: 110px;
-  }
-  .landing-note {
-    display: none;
-  }
-  .landing-footer {
-    left: 22px;
-    right: 22px;
-    font-size: 7px;
-    letter-spacing: 1px;
-  }
-  .landing-controls {
-    font-size: 7px;
-    line-height: 2.5;
-  }
   .hud {
     padding: 15px;
-  }
-  .hud .location {
-    display: none;
   }
   .hud-right {
     gap: 8px;
@@ -852,22 +603,6 @@ fieldset {
   .hud button {
     font-size: 7px;
     padding: 8px;
-  }
-  .mission {
-    left: 15px;
-    top: 78px;
-    width: 270px;
-  }
-  .controls {
-    padding: 18px 15px;
-    gap: 12px;
-  }
-  .controls em {
-    display: none;
-  }
-  .map {
-    right: 15px;
-    bottom: 72px;
   }
   .touch {
     display: flex;
@@ -889,9 +624,6 @@ fieldset {
   }
   .terminal {
     padding: 18px;
-  }
-  .terminal-heading .offline {
-    display: none;
   }
   fieldset {
     grid-template-columns: 1fr;
@@ -950,5 +682,1089 @@ fieldset {
 @media (prefers-reduced-motion: reduce) {
   * {
     scroll-behavior: auto !important;
+  }
+}
+/* Quiet revision: space belongs to the facility, controls appear in context. */
+.landing-veil {
+  background:
+    linear-gradient(90deg, #061018e8, #07121988 42%, #0913170d 80%),
+    linear-gradient(0deg, #040b10b0, transparent 40%),
+    url("/assets/facility.png") center/cover;
+  padding: 48px 7vw;
+}
+.title-mark {
+  font:
+    12px "Source Sans 3",
+    monospace;
+  letter-spacing: 4px;
+  color: #a3b5ae;
+}
+.landing {
+  margin-top: 20vh;
+}
+.overline {
+  font-size: 16px;
+  letter-spacing: 6px;
+  margin: 0 0 16px;
+  color: #9aacaa;
+}
+h1 {
+  font-size: clamp(86px, 8vw, 118px);
+  letter-spacing: -1px;
+  width: auto;
+  line-height: 0.95;
+}
+.title-time {
+  font:
+    12px "Source Sans 3",
+    monospace;
+  letter-spacing: 3px;
+  color: #9badab;
+  margin: 30px 0 36px;
+}
+.landing .primary {
+  min-width: 190px;
+  min-height: 48px;
+  font-size: 12px;
+}
+.landing .text-button {
+  padding: 12px 18px;
+}
+.landing-veil:after {
+  opacity: 0.22;
+}
+.hud {
+  padding: 26px 32px;
+  background: linear-gradient(#071219a0, transparent);
+  align-items: flex-start;
+}
+.shift-status {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font:
+    12px "Source Sans 3",
+    monospace;
+  letter-spacing: 1px;
+  color: #c3cec4;
+}
+.progress-count {
+  font-size: 11px;
+  color: #829b90;
+}
+.hud-right {
+  gap: 9px;
+}
+.hud button {
+  border: 0;
+  background: #08141a44;
+  color: #9aafa6;
+  font-size: 10px;
+  padding: 7px 9px;
+}
+.hud #pause {
+  font-size: 15px;
+}
+.room-caption {
+  position: absolute;
+  top: 88px;
+  left: 32px;
+  font:
+    11px "Source Sans 3",
+    monospace;
+  letter-spacing: 2px;
+  color: #b0bfb2;
+  animation: room-caption 4.5s forwards;
+  pointer-events: none;
+}
+.first-controls {
+  position: absolute;
+  left: 50%;
+  bottom: 45px;
+  transform: translateX(-50%);
+  font:
+    12px "Source Sans 3",
+    sans-serif;
+  color: #c0ccc1;
+  background: #07121988;
+  padding: 12px 18px;
+  white-space: nowrap;
+}
+.first-controls span {
+  margin: 0 12px;
+  color: #748b80;
+}
+.first-controls kbd {
+  font-size: 12px;
+}
+.ending-caption {
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  transform: translateX(-50%);
+  text-align: center;
+  font:
+    16px "Source Sans 3",
+    monospace;
+  letter-spacing: 3px;
+  color: #d3dec9;
+  animation: ending-in 1.3s forwards;
+}
+.ending-caption p {
+  font-size: 12px;
+  letter-spacing: 5px;
+  margin-top: 18px;
+}
+.panel {
+  border-color: #46585066;
+  background: linear-gradient(145deg, #17252bed, #0d191ef5);
+  box-shadow: 0 30px 100px #0006;
+}
+.panel-top {
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  color: #8fa69d;
+}
+.panel h2 {
+  font-size: 36px;
+}
+.registration {
+  width: min(570px, 100%);
+}
+.registration .panel-top {
+  margin-bottom: 24px;
+}
+.registration .fine {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 12px;
+  color: #82998e;
+  border-top: 0;
+  line-height: 1.7;
+  padding-top: 4px;
+}
+.registration .text-button {
+  font-size: 11px;
+}
+.panel label {
+  font-size: 12px;
+}
+.terminal {
+  width: min(690px, 100%);
+  padding: 28px 30px;
+}
+.terminal h2 {
+  font-size: 31px;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+.terminal .instruction {
+  font:
+    14px/1.6 "Source Sans 3",
+    sans-serif;
+  margin: 0 0 22px;
+  color: #b3c3bb;
+}
+.terminal pre {
+  font-size: 14px;
+  line-height: 1.7;
+  padding: 18px;
+  margin: 0 0 18px;
+}
+.terminal fieldset {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.terminal .option {
+  padding: 11px 13px;
+  margin: 0;
+  min-height: 44px;
+  background: #12222870;
+  border-color: #344b4660;
+}
+.option code {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.option-letter {
+  border: 0;
+  color: #819c8c;
+  font-size: 12px;
+  width: 20px;
+}
+.option:has(input:checked) {
+  background: #2b4139;
+  border-color: #9bb59e;
+}
+.terminal-actions {
+  margin-top: 0;
+  align-items: center;
+}
+.terminal-actions .primary {
+  min-height: 46px;
+  min-width: 170px;
+  font-size: 11px;
+}
+.terminal-actions #hint {
+  border: 0;
+  background: transparent;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 12px;
+  color: #9ab4a3;
+}
+.terminal #error {
+  margin: 7px 0;
+  min-height: 14px;
+}
+.hint {
+  font-size: 13px !important;
+  background: transparent !important;
+  border-left: 2px solid #728f7b;
+  padding: 0 0 0 12px !important;
+}
+.feedback {
+  text-align: left;
+  width: min(560px, 100%);
+}
+.feedback p {
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 20px 0;
+}
+.feedback .primary {
+  margin: 26px 0 0;
+  min-width: 175px;
+}
+.feedback .panel-top span:last-child {
+  color: #a8c29e;
+}
+.pause-panel {
+  width: min(440px, 100%);
+}
+.pause-panel .primary {
+  margin: 28px 0;
+}
+.pause-panel .check {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+.pause-panel #restart {
+  border: 0;
+  background: transparent;
+  padding-left: 0;
+}
+.pause-panel #menu {
+  margin-left: 20px;
+}
+.loading-shift {
+  text-align: center;
+  color: #aabfb1;
+  font:
+    12px "Source Sans 3",
+    monospace;
+  letter-spacing: 2px;
+}
+.loading-shift > span {
+  font-size: 17px;
+}
+.loading-shift p {
+  font-size: 11px;
+  color: #79968a;
+  margin-top: 20px;
+}
+.toast {
+  border: 0;
+  background: #0a191cd9;
+  font:
+    13px "Source Sans 3",
+    sans-serif;
+  padding: 12px 18px;
+  bottom: 32px;
+}
+.result .panel-top {
+  font-size: 10px;
+}
+@keyframes room-caption {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  15%,
+  65% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes ending-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-height: 780px) {
+  .landing {
+    margin-top: 16vh;
+  }
+  .terminal {
+    padding: 22px 28px;
+  }
+  .terminal h2 {
+    font-size: 28px;
+  }
+  .terminal pre {
+    padding: 14px 16px;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .terminal .instruction {
+    margin-bottom: 16px;
+  }
+  .terminal .option {
+    padding: 9px 11px;
+  }
+  .option code {
+    font-size: 12px;
+  }
+  .terminal .panel-top {
+    margin-bottom: 20px;
+  }
+}
+@media (max-width: 750px) {
+  .landing-veil {
+    padding: 28px;
+  }
+  .landing {
+    margin-top: 19vh;
+  }
+  h1 {
+    font-size: 86px;
+  }
+  .title-time {
+    margin: 28px 0;
+  }
+  .hud {
+    padding: 18px;
+  }
+  .room-caption {
+    left: 18px;
+    top: 70px;
+  }
+  .shift-status {
+    gap: 15px;
+    font-size: 11px;
+  }
+  .hud button {
+    font-size: 9px;
+  }
+  .terminal {
+    padding: 20px;
+  }
+  .terminal pre {
+    font-size: 12px;
+  }
+  .terminal h2 {
+    font-size: 27px;
+  }
+  .terminal .instruction {
+    font-size: 13px;
+  }
+  .first-controls {
+    font-size: 11px;
+    bottom: 24px;
+  }
+  .touch {
+    bottom: 78px;
+  }
+  .feedback p {
+    font-size: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .room-caption {
+    animation: none;
+    opacity: 0.6;
+  }
+  .ending-caption {
+    animation: none;
+  }
+}
+.final-terminal fieldset {
+  grid-template-columns: 1fr 1fr;
+}
+.final-terminal .option {
+  align-items: flex-start;
+}
+.final-terminal .option code {
+  font-size: 12px;
+}
+.final-terminal .instruction {
+  margin-bottom: 14px;
+}
+@media (max-width: 750px) {
+  .final-terminal fieldset {
+    grid-template-columns: 1fr;
+  }
+}
+.world-objective {
+  position: absolute;
+  bottom: 28px;
+  left: 32px;
+  right: 140px;
+  pointer-events: none;
+  color: #b6c8b9;
+  font:
+    12px/1.6 "Source Sans 3",
+    sans-serif;
+  text-shadow: 0 1px 5px #000;
+}
+.world-objective #inventory {
+  font:
+    10px "Source Sans 3",
+    monospace;
+  letter-spacing: 1px;
+  color: #c7c49a;
+}
+.first-controls {
+  bottom: 62px;
+}
+.pause-panel .check {
+  margin: 14px 0 !important;
+}
+@media (max-width: 750px) {
+  .world-objective {
+    left: 18px;
+    right: 18px;
+    bottom: 28px;
+    font-size: 12px;
+  }
+  .first-controls {
+    bottom: 45px;
+  }
+  .touch {
+    bottom: 105px;
+  }
+}
+.tension-status {
+  display: block;
+  font:
+    9px/1.6 "Source Sans 3",
+    monospace;
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+.tension-status[data-state="chase"],
+.tension-status[data-state="alert"] {
+  color: #d39480;
+}
+@media (max-width: 750px) {
+  .touch {
+    gap: 6px;
+  }
+  .touch button {
+    min-width: 43px;
+    padding: 10px;
+  }
+}
+.control-guide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 18px;
+  margin: 22px 0;
+}
+.control-guide p {
+  margin: 0;
+  font-size: 12px;
+}
+.control-guide kbd {
+  display: block;
+  color: #d9cdaa;
+  font: 11px monospace;
+  margin-bottom: 5px;
+}
+.horror-warning,
+.fault-message {
+  border-left: 2px solid #a36a55;
+  padding-left: 14px;
+  color: #d5b09a;
+}
+.briefing .check {
+  margin: 12px 0;
+}
+.reflection textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 130px;
+  max-height: 230px;
+  padding: 14px;
+  border: 1px solid #39504c;
+  background: #09171b;
+  color: #d7e0d5;
+  font:
+    14px/1.7 "Source Sans 3",
+    sans-serif;
+}
+.opening {
+  max-width: 650px;
+}
+.opening h2 {
+  font:
+    clamp(34px, 5vw, 66px)/1.1 "Oswald",
+    sans-serif;
+  margin: 25px 0;
+}
+.opening p {
+  max-width: 490px;
+  line-height: 1.8;
+  color: #a7bab0;
+  margin-bottom: 32px;
+}
+.opening-veil {
+  background: linear-gradient(90deg, #02090de8, #02090d99);
+}
+.result .rank-description {
+  font-size: 11px;
+  max-width: 260px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+.essay-result {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font:
+    14px/1.8 "Source Sans 3",
+    sans-serif;
+  margin: 24px 0;
+  padding-left: 18px;
+  border-left: 2px solid #849b86;
+  max-height: 230px;
+  overflow: auto;
+}
+.reflection-question {
+  font-size: 13px;
+  color: #a8b8b0;
+}
+.lesson-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 22px;
+  max-height: 340px;
+  overflow: auto;
+}
+.lesson-list article {
+  border-top: 1px solid #294039;
+  padding-top: 12px;
+}
+.lesson-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+}
+.lesson-title span {
+  font: 9px monospace;
+  color: #b9ba97;
+}
+.lesson-list p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #a9bab1;
+}
+@media (max-width: 750px) {
+  .control-guide {
+    gap: 10px;
+  }
+  .lesson-list {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .answer-disturbance img {
+    animation: none;
+  }
+}
+:root {
+  --mint: #bfb49b;
+  --line: #4b4940;
+  --muted: #9e9a8e;
+  color: #d4d0c2;
+}
+h1 {
+  font:
+    400 clamp(66px, 8.8vw, 124px)/0.93 "Oswald",
+    "Source Sans 3",
+    sans-serif;
+  letter-spacing: -3px;
+  width: auto;
+}
+h1 span {
+  color: #b6a993;
+}
+h2,
+.panel h2,
+.opening h2 {
+  font-family: "Oswald", "Source Sans 3", sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.4px;
+}
+.overline {
+  font:
+    12px "Source Sans 3",
+    Courier,
+    monospace;
+  letter-spacing: 3px;
+}
+.panel {
+  background: #111716f2;
+  border: 1px solid #5d5b4c;
+  border-top: 3px solid #7d7562;
+  border-radius: 0;
+  box-shadow: none;
+}
+.primary {
+  background: #c4b99f;
+  border-color: #c4b99f;
+  color: #191e19;
+}
+button {
+  background: #171d1b;
+  border-color: #555c51;
+  color: #c9c7b8;
+  letter-spacing: 0.5px;
+}
+button:hover {
+  border-color: #aea38a;
+  background: #353b32;
+}
+.primary:hover {
+  background: #d8ccb1;
+  color: #151b16;
+}
+.terminal .instruction,
+.opening p,
+.reflection > p {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 18px 0 !important;
+}
+.volume-control input {
+  accent-color: #bbb099;
+  flex: 1;
+}
+.record-veil {
+  background: radial-gradient(ellipse at center, #28302ace, #070c0ef5);
+  padding: 16px;
+}
+.shift-record {
+  position: relative;
+  width: min(940px, 100%);
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: 26px 34px;
+  background: #141a1e;
+  color: #e8ecee;
+  border: 0;
+  box-shadow: 8px 12px 0 #0004;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    #6e65460a 4px
+  );
+}
+.record-header,
+.record-section-label,
+.record-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  font:
+    10px/1.5 "Source Sans 3",
+    Courier,
+    monospace;
+}
+.record-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #39444c;
+  letter-spacing: 1px;
+}
+.record-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 14px 0 8px;
+}
+.shift-record .overline {
+  color: #aeb6bc;
+  margin: 0 0 5px;
+  font-size: 9px;
+}
+.shift-record h2 {
+  font:
+    400 40px/0.92 "Oswald",
+    "Source Sans 3",
+    sans-serif;
+  margin: 0;
+  color: #e8ecee;
+}
+.record-stamp {
+  transform: none;
+  border: 1px solid #dca766;
+  color: #dca766;
+  padding: 8px 14px;
+  font:
+    700 13px/1.2 "Source Sans 3",
+    monospace;
+  text-align: center;
+  opacity: 0.85;
+}
+.shift-record .result-body {
+  gap: 25px;
+  padding: 0 0 14px;
+}
+.shift-record .identity-result label {
+  color: #aeb6bc;
+  font-size: 9px;
+  margin: 6px 0;
+}
+.shift-record .identity-result strong {
+  color: #e8ecee;
+  font:
+    700 14px "Source Sans 3",
+    monospace;
+  margin-top: 3px;
+}
+.shift-record .form-row {
+  gap: 18px;
+}
+.record-status {
+  display: flex;
+  gap: 25px;
+  font-size: 10px;
+  margin-top: 14px;
+}
+.shift-record .score {
+  border-left: 1px solid #39444c;
+  padding-left: 25px;
+  width: 320px;
+}
+.shift-record .score small {
+  color: #aeb6bc;
+  font-size: 9px;
+}
+.shift-record .score > strong {
+  font:
+    700 54px/1.1 "Source Sans 3",
+    monospace;
+  color: #e6b770;
+}
+.shift-record .score > strong span {
+  font-size: 17px;
+  color: #aeb6bc;
+}
+.shift-record .answer-count {
+  font-size: 9px;
+  margin: 5px 0;
+}
+.shift-record .rank {
+  color: #e6b770;
+  font:
+    700 13px "Source Sans 3",
+    monospace;
+  padding: 8px 0 0;
+}
+.shift-record .rank-description {
+  margin: 6px 0 0;
+  max-width: none;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.record-reflection {
+  border-top: 1px solid #39444c;
+  padding: 12px 0;
+}
+.record-section-label {
+  color: #aeb6bc;
+  font-size: 9px;
+}
+.shift-record .essay-result {
+  margin: 10px 0 8px;
+  border: 0;
+  padding: 0;
+  max-height: none;
+  overflow: visible;
+  font:
+    14px/1.45 "Source Sans 3",
+    sans-serif;
+  color: #e8ecee;
+}
+.shift-record .reflection-question {
+  font:
+    10px/1.5 "Source Sans 3",
+    monospace;
+  color: #9da8af;
+  margin: 0;
+}
+.learning-record {
+  border-top: 1px dashed #39444c;
+  padding: 12px 0;
+}
+.learning-record summary {
+  cursor: pointer;
+  font:
+    10px "Source Sans 3",
+    monospace;
+}
+.shift-record .lesson-list {
+  margin-top: 14px;
+  max-height: none;
+}
+.shift-record .lesson-list article {
+  border-color: #8b8b72;
+}
+.shift-record .lesson-list p {
+  color: #c6cfd4;
+  font-size: 12px;
+}
+.shift-record .lesson-title span {
+  color: #dca766;
+}
+.record-footer {
+  border-top: 1px solid #39444c;
+  color: #9da8af;
+  padding: 10px 0;
+  font-size: 9px;
+}
+.shift-record .actions {
+  margin-top: 8px;
+}
+.shift-record button {
+  background: transparent;
+  color: #e8ecee;
+  border-color: #52616b;
+  font-size: 10px;
+  padding: 10px 16px;
+}
+.shift-record .primary {
+  background: #dca766;
+  color: #10161a;
+  border-color: #dca766;
+  min-height: 42px;
+}
+.shift-record #error {
+  font-size: 10px;
+}
+@media (max-width: 750px) {
+  .shift-record {
+    padding: 20px;
+  }
+  .shift-record h2 {
+    font-size: 34px;
+  }
+  .shift-record .result-body {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .shift-record .score {
+    width: 100%;
+    padding: 12px 0 0;
+    border-left: 0;
+    border-top: 1px solid #39444c;
+  }
+  .record-section-label,
+  .record-footer {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .shift-record .actions {
+    flex-wrap: wrap;
+  }
+}
+.shift-record p {
+  color: #c6cfd4;
+}
+.shift-record .rank-description {
+  color: #aeb6bc;
+}
+.shift-record .record-header,
+.shift-record .record-section-label,
+.shift-record .record-footer {
+  font-size: 10px;
+}
+.shift-record .identity-result label,
+.shift-record .answer-count {
+  font-size: 10px;
+}
+.shift-record .rank-description {
+  font-size: 11px;
+}
+
+/* Industrial station typography and transmission failure. */
+h1,
+h2,
+.landing h1,
+.shift-record h2 {
+  font-family: "Oswald", sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  line-height: 1.08;
+}
+button {
+  font-family: "Source Sans 3", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+}
+pre,
+code,
+kbd {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.panel:not(.shift-record) {
+  background-color: #11191eef;
+  border-color: #45535c;
+}
+.shift-record {
+  background-image: none;
+  border: 1px solid #45535c;
+  border-top: 3px solid #dca766;
+  box-shadow: 0 24px 80px #0009;
+}
+.shift-record h2 {
+  font-size: 38px;
+}
+.shift-record .essay-result {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 15px;
+}
+.answer-disturbance {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #000;
+  overflow: hidden;
+  pointer-events: auto;
+}
+.answer-disturbance img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  opacity: 0;
+  filter: none;
+  transform: scale(0.94);
+}
+.answer-disturbance span {
+  position: absolute;
+  inset: auto auto 12% 8%;
+  color: #a9b4bc;
+  font:
+    500 16px "Oswald",
+    sans-serif;
+  letter-spacing: 0.25em;
+}
+.answer-disturbance[data-phase="signal"] {
+  background: repeating-linear-gradient(
+    0deg,
+    #05090c,
+    #05090c 2px,
+    #101920 3px,
+    #05090c 4px
+  );
+}
+.answer-disturbance[data-phase="impact"] img {
+  opacity: 1;
+  animation: watcher-impact 470ms both;
+}
+.answer-disturbance[data-phase="impact"] span,
+.answer-disturbance[data-phase="after"] span {
+  display: none;
+}
+@keyframes watcher-impact {
+  0% {
+    transform: scale(0.96) rotate(var(--approach));
+  }
+  30% {
+    transform: scale(1.14) rotate(0deg) translateX(-1%);
+  }
+  55% {
+    transform: scale(1.12) translateX(1%);
+  }
+  100% {
+    transform: scale(1.13);
+  }
+}
+
+.mode-choices {
+  display: block;
+  border: 0;
+  padding: 0;
+  margin: 18px 0;
+}
+.mode-choices legend {
+  padding: 0 0 9px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #adb9c1;
+}
+.mode-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.mode-options .mode-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 13px;
+  border: 1px solid #3c4a54;
+  background: #0c1318;
+  cursor: pointer;
+}
+.mode-card:has(input:checked) {
+  border-color: #dca766;
+  background: #dca7660d;
+}
+.mode-card:has(input:focus-visible) {
+  outline: 2px solid #c6d3d0;
+  outline-offset: 2px;
+}
+.mode-card input {
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  accent-color: #dca766;
+  flex: 0 0 auto;
+}
+.mode-card strong {
+  display: block;
+  font-size: 13px;
+  color: #e5eaed;
+  letter-spacing: 1px;
+}
+.mode-card small {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #aebbc3;
+}
+@media (max-width: 500px) {
+  .mode-options {
+    grid-template-columns: 1fr;
   }
 }
