@@ -1768,3 +1768,383 @@ kbd {
     grid-template-columns: 1fr;
   }
 }
+
+.character-choices {
+  display: block;
+  border: 0;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.character-choices legend {
+  padding: 0 0 8px;
+  color: #adb9c1;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+.character-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.character-options .character-card {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #3c4a54;
+  background: #0c1318;
+  cursor: pointer;
+  overflow: hidden;
+}
+.character-card:has(input:checked) {
+  border-color: #dca766;
+  box-shadow: inset 0 -2px #dca766;
+}
+.character-card:has(input:focus-visible) {
+  outline: 2px solid #c6d3d0;
+  outline-offset: 2px;
+}
+.character-options .character-card input {
+  position: absolute;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  top: 10px;
+  right: 10px;
+  margin: 0;
+  accent-color: #dca766;
+}
+/* ID portraits reuse the first frame of the actual game character sheet. */
+.character-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 9px 12px;
+  border-bottom: 1px solid #39444c;
+  color: #dca766;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.character-card-header span {
+  color: #8f9ea7;
+  font-size: 8px;
+  padding-right: 21px;
+}
+.character-card-body {
+  display: flex;
+  gap: 12px;
+  padding: 10px 12px;
+}
+.character-portrait {
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 78px;
+  height: 104px;
+  border: 1px solid #3c4a54;
+  background: linear-gradient(145deg, #33404a, #11191f);
+}
+.character-portrait::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  top: -3px;
+  left: calc(50% - 130px);
+  background-image: var(--sprite);
+  background-size: 780px 520px;
+  background-repeat: no-repeat;
+}
+.character-card-info {
+  min-width: 0;
+  align-self: center;
+}
+.character-card-info small {
+  display: block;
+  font-size: 8px;
+  color: #9cabb4;
+  letter-spacing: 1px;
+}
+.character-card-info strong {
+  display: block;
+  font:
+    500 20px/1.15 "Oswald",
+    sans-serif;
+  color: #e5eaed;
+  margin: 6px 0;
+}
+.character-card-info > span {
+  display: block;
+  color: #9cabb4;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.character-barcode {
+  width: 70px;
+  max-width: 100%;
+  height: 15px;
+  margin-top: 12px;
+  background: repeating-linear-gradient(
+    90deg,
+    #83929b 0 1px,
+    transparent 1px 3px,
+    #83929b 3px 5px,
+    transparent 5px 6px,
+    #83929b 6px 7px,
+    transparent 7px 10px
+  );
+  opacity: 0.65;
+}
+.character-card-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 8px 12px;
+  border-top: 1px solid #39444c;
+  font-size: 8px;
+  letter-spacing: 0.7px;
+  color: #9cabb4;
+}
+.character-state::after {
+  content: "PILIH";
+}
+.character-card:has(input:checked) .character-state::after {
+  content: "DIPILIH";
+  color: #dca766;
+}
+@media (max-width: 500px) {
+  .character-card-body {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .character-portrait {
+    flex-basis: auto;
+    width: 100%;
+  }
+  .character-card-info {
+    width: 100%;
+  }
+  .character-card-header {
+    font-size: 9px;
+  }
+  .character-card-header span {
+    display: none;
+  }
+  .character-card-footer {
+    flex-wrap: wrap;
+  }
+}
+.character-card:first-child .character-portrait::before {
+  left: calc(50% - 142px);
+}
+.character-card:last-child .character-portrait::before {
+  left: calc(50% - 165px);
+}
+/* Scanner entry sequence: short, skippable, and still readable without animation. */
+.cinematic-opening {
+  width: min(590px, 100%);
+}
+.scanner-rig {
+  position: relative;
+  height: 210px;
+  margin-bottom: 24px;
+  border: 1px solid #46545d;
+  background: #090f14;
+  overflow: hidden;
+}
+.scanner-door {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, #1f2b32 0 2px, #111b22 2px 80px);
+  border-right: 4px solid #dca766;
+  transition: transform 1.6s ease;
+}
+.scanner-card {
+  position: relative;
+  width: 275px;
+  margin: 18px auto 0;
+  border: 1px solid #647580;
+  background: #121d24;
+  padding: 12px;
+  box-shadow: 0 8px 20px #0008;
+  animation: insert-card 1.4s ease both;
+  overflow: hidden;
+}
+.scanner-label {
+  display: block;
+  padding-bottom: 8px;
+  color: #dca766;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.scanner-personnel {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.scanner-personnel strong {
+  display: block;
+  font:
+    500 28px "Oswald",
+    sans-serif;
+  color: #e5eaed;
+}
+.scanner-personnel small,
+.scanner-personnel span {
+  display: block;
+  margin-top: 6px;
+  font-size: 10px;
+  color: #aebbc3;
+}
+.scanner-card .character-portrait::before {
+  left: calc(50% - var(--portrait-offset));
+}
+.scan-beam {
+  position: absolute;
+  height: 2px;
+  inset: 0 0 auto;
+  background: #adcfc0;
+  box-shadow: 0 0 16px #9cbfb5;
+  animation: scan-card 2s ease-in-out infinite;
+}
+.scanner-status {
+  position: absolute;
+  inset: auto 0 9px;
+  text-align: center;
+  color: #aebbc3;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+.door-authorized .scanner-door {
+  transform: translateX(-90%);
+  animation: open-scanner-door 1.6s ease both;
+}
+.door-authorized .scanner-card {
+  opacity: 0.7;
+  animation: none;
+}
+.door-authorized .scan-beam {
+  display: none;
+}
+.door-authorized .scanner-status {
+  color: #c1d3ac;
+}
+@keyframes insert-card {
+  from {
+    transform: translateY(130px) rotate(-7deg);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes scan-card {
+  0%,
+  100% {
+    top: 8%;
+    opacity: 0;
+  }
+  20%,
+  80% {
+    opacity: 0.7;
+  }
+  90% {
+    top: 90%;
+  }
+}
+.radio-caption {
+  position: absolute;
+  right: 32px;
+  top: 104px;
+  max-width: min(490px, calc(100vw - 64px));
+  padding: 11px 15px;
+  border-left: 2px solid #93afa7;
+  background: #0a1115e8;
+  pointer-events: none;
+}
+.radio-caption > span {
+  font-size: 9px;
+  color: #aebbc3;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.radio-caption p {
+  margin: 5px 0 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #e0e7e8;
+}
+.radio-caption.suspicious {
+  border-color: #c69166;
+}
+.radio-caption.suspicious > span {
+  color: #dca766;
+}
+.record-ending {
+  padding: 11px 0;
+  border-top: 1px solid #39444c;
+}
+.record-ending strong {
+  font:
+    500 19px "Oswald",
+    sans-serif;
+  color: #e6b770;
+}
+.shift-record .record-ending p {
+  margin: 5px 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.record-ending > span {
+  font-size: 9px;
+  color: #aebbc3;
+  letter-spacing: 1px;
+}
+.ending-caption small {
+  display: block;
+  max-width: 540px;
+  margin: 14px auto;
+  padding: 0 20px;
+  color: #d0dbd8;
+  font:
+    17px/1.5 "Source Sans 3",
+    sans-serif;
+}
+.shift-record .actions {
+  flex-wrap: wrap;
+}
+@media (max-width: 500px) {
+  .radio-caption {
+    left: 18px;
+    right: 18px;
+    max-width: calc(100vw - 36px);
+    top: 110px;
+  }
+  .scanner-rig {
+    height: 200px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scanner-card,
+  .scan-beam {
+    animation: none;
+  }
+  .scan-beam {
+    top: 50%;
+  }
+  .scanner-door {
+    transition: none;
+  }
+}
+
+@keyframes open-scanner-door {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-90%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .door-authorized .scanner-door {
+    animation: none;
+  }
+}

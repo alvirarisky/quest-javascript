@@ -11,18 +11,34 @@ export class Soundscape {
     const ctx = this.context();
     ctx.resume().catch(() => {});
     if (!this.effectLoading) {
-      this.effectLoading = fetch("/audio/null07-impact.wav")
-        .then((r) => {
-          if (!r.ok) throw new Error("Impact unavailable");
-          return r.arrayBuffer();
-        })
-        .then((bytes) => ctx.decodeAudioData(bytes))
-        .then((buffer) => {
-          this.effect = buffer;
-        })
-        .catch(() => {
-          this.effectLoading = null;
+      this.effects = {};
+      this.voices = new Set();
+      this.lastEffectAt = {};
+      this.effectLoading = Promise.allSettled(
+        [
+          "impact",
+          "step",
+          "door",
+          "machine",
+          "radio",
+          "knock",
+          "pipe",
+          "steam",
+          "robot",
+          "scan",
+          "whisper",
+        ].map(async (name) => {
+          const response = await fetch(`/audio/null07-${name}.wav`);
+          if (!response.ok) throw new Error(`Sound unavailable: ${name}`);
+          this.effects[name] = await ctx.decodeAudioData(
+            await response.arrayBuffer(),
+          );
+        }),
+      ).then((results) => {
+        results.forEach((result) => {
+          if (result.status === "rejected") console.warn(result.reason.message);
         });
+      });
     }
     if (this.loading) return;
     this.loading = fetch("/audio/null07-ambience.wav")
@@ -53,20 +69,66 @@ export class Soundscape {
       });
   }
   impact() {
-    if (!this.enabled || !this.effect) return false;
+    return this.play("scare");
+  }
+  play(kind) {
+    const name =
+      kind === "scare" ? "impact" : kind === "haunt" ? "knock" : kind;
+    const buffer = this.effects?.[name];
+    if (!this.enabled || !buffer) return false;
     const ctx = this.context();
+    const interval =
+      { step: 0.12, door: 0.6, machine: 1.5, knock: 2.5, radio: 0.2 }[name] ||
+      0.1;
+    if (ctx.currentTime - (this.lastEffectAt[name] ?? -100) < interval)
+      return true;
+    this.lastEffectAt[name] = ctx.currentTime;
+    if (this.voices.size >= 6) {
+      const oldest = this.voices.values().next().value;
+      oldest.source.stop();
+    }
     const source = ctx.createBufferSource(),
       gain = ctx.createGain();
-    source.buffer = this.effect;
-    source.playbackRate.value = 0.94 + Math.random() * 0.12;
-    gain.gain.value = this.volume * 0.65;
-    source.connect(gain).connect(ctx.destination);
+    source.buffer = buffer;
+    source.playbackRate.value =
+      name === "scan" ? 1 : 0.94 + Math.random() * 0.12;
+    gain.gain.value =
+      this.volume *
+      ({
+        impact: 0.65,
+        step: 0.13,
+        door: 0.3,
+        machine: 0.18,
+        radio: 0.18,
+        knock: 0.24,
+        pipe: 0.15,
+        steam: 0.15,
+        robot: 0.2,
+        scan: 0.2,
+        whisper: 0.12,
+      }[name] || 0.2);
+    const pan = ctx.createStereoPanner();
+    pan.pan.value = ["knock", "pipe", "whisper"].includes(name)
+      ? Math.random() < 0.5
+        ? -0.55
+        : 0.55
+      : 0;
+    source.connect(gain).connect(pan).connect(ctx.destination);
+    const voice = { source, gain, pan, name };
+    this.voices.add(voice);
     source.onended = () => {
+      this.voices.delete(voice);
       source.disconnect();
       gain.disconnect();
+      pan.disconnect();
     };
     source.start();
     return true;
+  }
+  stopEffects(all = false) {
+    for (const voice of this.voices || []) {
+      if (all || !["impact", "scan"].includes(voice.name)) voice.source.stop();
+    }
   }
   set(enabled, active, volume, danger = 0) {
     if (
@@ -76,6 +138,11 @@ export class Soundscape {
       this.danger === danger
     )
       return;
+    if (!enabled || !active) this.stopEffects(!enabled);
+    if (this.volume !== volume) {
+      for (const voice of this.voices || [])
+        voice.gain.gain.value *= this.volume ? volume / this.volume : 0;
+    }
     Object.assign(this, { enabled, active, volume, danger });
     this.update();
   }

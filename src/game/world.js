@@ -36,10 +36,16 @@ export class Facility extends Phaser.Scene {
     this.load.image("scare-closeup", "/assets/watcher-scare-v2.png");
     this.load.image("facility", "/assets/facility.png");
     this.load.image("rooms", "/assets/rooms-atlas.png");
-    this.load.spritesheet("operator", "/assets/operator.png", {
-      frameWidth: 512,
-      frameHeight: 512,
-    });
+    for (const character of ["female", "male"]) {
+      this.load.spritesheet(
+        `operator-${character}`,
+        `/assets/characters/${character}-sprite.png`,
+        {
+          frameWidth: 512,
+          frameHeight: 512,
+        },
+      );
+    }
     Object.entries({ ...illustrations, ...props }).forEach(([key, svg]) =>
       this.load.svg(key, "data:image/svg+xml;base64," + btoa(svg)),
     );
@@ -64,6 +70,8 @@ export class Facility extends Phaser.Scene {
     this.backdrops = [];
     this.decor = [];
     this.feeds = [];
+    this.recoveryFx = [];
+    this.nextAmbientAt = 0;
     this.taskState = this.bridge.worldState();
     this.taskObjects = new Map();
     this.holding = null;
@@ -80,7 +88,12 @@ export class Facility extends Phaser.Scene {
     );
     this.physics.add.existing(floor, true);
     this.player = this.physics.add
-      .sprite(170, 530, "operator", 0)
+      .sprite(
+        170,
+        530,
+        `operator-${this.bridge.character?.() === "female" ? "female" : "male"}`,
+        0,
+      )
       .setDepth(20)
       .setScale(0.41);
     this.player.body.setSize(95, 425).setOffset(207, 45);
@@ -130,6 +143,12 @@ export class Facility extends Phaser.Scene {
     this.applied = this.bridge.progress();
     this.applyProgress(false);
     this.bridge.ready(this);
+  }
+  selectCharacter() {
+    const character =
+      this.bridge.character?.() === "female" ? "female" : "male";
+    this.player.setTexture(`operator-${character}`, 0);
+    this.player.body.setSize(95, 425).setOffset(207, 45);
   }
   createTension() {
     this.refuges = refugeOffsets.map((offset) =>
@@ -444,6 +463,114 @@ export class Facility extends Phaser.Scene {
         .rectangle(x + s.gate, 430, 114, 376, 0xcbd2b2, 0.02)
         .setDepth(5);
     }
+    this.buildRecoveryFX(s, i);
+  }
+  buildRecoveryFX(s, room) {
+    const graphics = this.add.graphics();
+    graphics.lineStyle(2, 0x90c2b1, 0.6);
+    graphics.fillStyle(0x90c2b1, 0.25);
+    const x = s.start;
+    // Each restored system leaves a distinct, persistent visual trace.
+    if (room === 0) {
+      for (let i = 0; i < 5; i++)
+        graphics.fillRect(
+          x + s.terminal - 25 + i * 11,
+          FLOOR - 110 - i * 3,
+          6,
+          15 + i * 3,
+        );
+    } else if (room === 1) {
+      graphics.strokeCircle(x + 530, 325, 65);
+      graphics.fillCircle(x + 530, 325, 10);
+    } else if (room === 2) {
+      for (let i = 0; i < 3; i++)
+        graphics.fillCircle(x + 230 + i * 125, 235, 4);
+    } else if (room === 3) {
+      for (let i = 0; i < 5; i++) {
+        const ax = x + 850 + i * 45;
+        graphics.lineBetween(ax, FLOOR - 14, ax + 18, FLOOR - 14);
+        graphics.lineBetween(ax + 12, FLOOR - 20, ax + 18, FLOOR - 14);
+      }
+    } else if (room === 4) {
+      for (let i = 0; i < 7; i++)
+        graphics.strokeCircle(
+          x + 460 + i * 19,
+          390 - (i % 3) * 30,
+          4 + (i % 3),
+        );
+    } else if (room === 5) {
+      graphics.fillTriangle(x + 500, 270, x + 410, FLOOR, x + 630, FLOOR);
+    } else if (room === 6) {
+      graphics.strokeCircle(x + 950, 285, 32);
+      graphics.strokeCircle(x + 950, 285, 55);
+      graphics.lineBetween(x + 895, 285, x + 1005, 285);
+    } else {
+      graphics.fillTriangle(
+        x + s.gate,
+        300,
+        x + s.gate - 190,
+        FLOOR,
+        x + s.gate + 30,
+        FLOOR,
+      );
+    }
+    const label = this.add.text(x + s.terminal - 35, FLOOR - 155, "ONLINE", {
+      font: "10px monospace",
+      color: "#b9d6c5",
+    });
+    this.recoveryFx.push(
+      this.add.container(0, 0, [graphics, label]).setDepth(12).setAlpha(0),
+    );
+  }
+  reactToRecovery(room) {
+    const fx = this.recoveryFx[room];
+    if (fx && !this.bridge.reduced())
+      this.tweens.add({
+        targets: fx,
+        alpha: 0.7,
+        duration: 900,
+        yoyo: true,
+        ease: "Sine.InOut",
+      });
+    const sound = [
+      "scan",
+      "machine",
+      "radio",
+      "door",
+      "steam",
+      "robot",
+      "radio",
+      "door",
+    ][room];
+    this.bridge.sound(sound);
+    this.bridge.recovered?.(room);
+  }
+  setEndingStyle(ending) {
+    this.backdrops.forEach((bg) => bg.setTint(ending.tint));
+    this.exitGlow
+      .setFillStyle(
+        ending.tier >= 2 ? 0xb9d6c5 : ending.tier === 1 ? 0xdca766 : 0xc17c72,
+      )
+      .setAlpha(0.35);
+  }
+  ambientBeat(time) {
+    if (!this.nextAmbientAt) this.nextAmbientAt = time + 9500;
+    if (time < this.nextAmbientAt || this.bridge.progress() === 8) return;
+    this.nextAmbientAt = time + Phaser.Math.Between(11000, 18000);
+    const sounds = [
+      "pipe",
+      "machine",
+      "radio",
+      "knock",
+      "steam",
+      "robot",
+      "whisper",
+      "pipe",
+    ];
+    const sound = sounds[this.room] || "pipe";
+    this.bridge.sound(
+      sound === "whisper" && !this.bridge.scary() ? "pipe" : sound,
+    );
   }
   applyProgress(animate = true) {
     const p = this.bridge.progress(),
@@ -452,6 +579,7 @@ export class Facility extends Phaser.Scene {
       const open = passageReady(i, p, this.taskState);
       const wasOpen = g.open;
       g.open = open;
+      if (animate && open && !wasOpen) this.bridge.sound("door");
       g.collider.body.enable = !open;
       if (open) {
         if (animate && !wasOpen && !this.bridge.reduced()) {
@@ -470,7 +598,8 @@ export class Facility extends Phaser.Scene {
           .setPosition(sectors[i].start + sectors[i].gate, FLOOR)
           .setAlpha(1);
       this.terminals[i].led.setFillStyle(i < p ? 0xacc2a1 : 0xbc7765);
-      this.lights[i].setAlpha(p > 1 ? 0.45 : 0.08);
+      this.lights[i].setAlpha(i < p ? 0.45 : 0.08);
+      this.recoveryFx[i]?.setAlpha(i < p ? 0.32 : 0);
     });
     this.feeds.forEach((f) => {
       f.screen.setAlpha(f.room < p ? 0.7 : 0.08);
@@ -485,14 +614,15 @@ export class Facility extends Phaser.Scene {
     }
     this.labLight?.setAlpha(p > 4 ? 0.2 : 0.025);
     this.exitGlow?.setAlpha(p === 8 ? 0.22 : 0.02);
-    this.backdrops.forEach((b) =>
-      b.setTint(p === 8 ? 0xc9d7bd : p > 1 ? 0xaabbb2 : 0x80969a),
+    this.backdrops.forEach((b, room) =>
+      b.setTint(room < p ? 0xaabbb2 : 0x80969a),
     );
     if (p === 8) this.watcher?.setVisible(false);
     this.applied = p;
     this.refreshTasks();
     if (animate && p > old) {
       this.bridge.sound("unlock");
+      for (let room = old; room < p; room++) this.reactToRecovery(room);
       if (p === 3 || p === 5)
         this.time.delayedCall(650, () => this.haunt(p - 1));
     }
@@ -601,7 +731,18 @@ export class Facility extends Phaser.Scene {
     completeTask(this.taskState, id);
     this.checkpoint();
     this.applyProgress();
-    this.bridge.sound("unlock");
+    this.bridge.sound(
+      {
+        power: "machine",
+        seal: "steam",
+        route: "robot",
+        signal: "radio",
+        release: "door",
+        badge: "scan",
+        exit: "door",
+      }[id] || "unlock",
+    );
+    this.bridge.taskDone?.(id);
   }
   candidates() {
     const i = sectorAt(this.player.x),
@@ -827,6 +968,7 @@ export class Facility extends Phaser.Scene {
         : this.keys.D.isDown || this.keys.RIGHT.isDown
           ? 1
           : 0);
+    this.ambientBeat(time);
     const speed = this.updateTension(delta, dir);
     this.player.setVelocityX(dir * speed);
     if (dir) {

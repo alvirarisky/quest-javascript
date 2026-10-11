@@ -12,3 +12,12 @@ No copyrighted game characters or third-party game artwork are used.
 
 - `public/assets/watcher-scare-v2.png`: Original close-range horror creature pressed against industrial observation glass, gaunt charcoal face, deep eyes, hand against the window, restrained warm corridor lighting, cinematic realistic texture. No gore, text, logos or copyrighted game characters. Generated through built-in imagegen and copied locally; cropped to fill the viewport during the impact.
 - `public/audio/null07-impact.wav`: Original procedural metallic slam, distorted breath and scrape; generated with Python standard-library synthesis, without third-party recordings.
+
+## Selectable protagonists
+
+- User-supplied photographs are likeness references for the sprites. The selector shows industrial personnel ID cards using the first sprite frame; original photographs are not bundled as public assets.
+- `female-sprite.png`: six 512×512 poses in a 1536×1024 transparent sheet, derived from the supplied female photo. Long black hair, black glasses, burgundy outerwear, heart pendant, trousers, boots and flashlight. Existing operator sheet used only as the pose/style reference.
+- `male-sprite.png`: same six-frame layout, derived from the supplied male photo. Tousled black hair, charcoal olive jacket, black shirt, chain necklace, watch, trousers, boots and flashlight.
+- Both sheets were generated with the built-in imagegen tool and copied into the workspace. Pose order: idle, two walking strides, terminal interaction, startled, escape. The original uploaded portraits remain reference inputs only.
+
+- `public/audio/null07-{step,door,machine,radio,knock,pipe,steam,robot,scan,whisper}.wav`: ten original deterministic mono PCM facility effects, generated with Python standard-library synthesis by `scripts/generate-effects.py`. No external recordings or copyrighted audio. Distant cues are panned in Web Audio; the radio is a static/tuning effect with readable subtitles, not recorded spoken dialogue.

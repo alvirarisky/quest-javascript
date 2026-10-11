@@ -16,10 +16,20 @@ page.on("console", (m) => {
 page.on("pageerror", (e) => errors.push(e.message));
 await page.addInitScript(() => {
   window.__soundSources = [];
+  window.__decodedBuffers = [];
+  window.__endedSources = new Set();
+  const decode = AudioContext.prototype.decodeAudioData;
+  AudioContext.prototype.decodeAudioData = function (...args) {
+    return decode.apply(this, args).then((buffer) => {
+      window.__decodedBuffers.push(buffer);
+      return buffer;
+    });
+  };
   const make = AudioContext.prototype.createBufferSource;
   AudioContext.prototype.createBufferSource = function (...args) {
     const node = make.apply(this, args);
     window.__soundSources.push(node);
+    node.addEventListener("ended", () => window.__endedSources.add(node));
     return node;
   };
   const connect = AudioNode.prototype.connect;
@@ -88,6 +98,26 @@ try {
   await browser.close();
   throw e;
 }
+await page.waitForFunction(() => window.__decodedBuffers.length === 12);
+await page.keyboard.down("d");
+await page.waitForTimeout(450);
+await page.keyboard.up("d");
+await page.keyboard.press("Escape");
+await page.waitForSelector("#resume");
+await page.waitForTimeout(100);
+assert.ok(
+  await page.evaluate(() =>
+    window.__soundSources
+      .filter((s) => !s.loop && Math.abs(s.buffer.duration - 0.32) < 0.01)
+      .every((s) => window.__endedSources.has(s)),
+  ),
+  "Footsteps continued during pause",
+);
+await page.click("#resume");
+// Return to the terminal interaction range using ordinary movement.
+await page.keyboard.down("a");
+await page.waitForTimeout(450);
+await page.keyboard.up("a");
 await page.waitForTimeout(1000);
 const sound = () =>
   page.evaluate(() => {
@@ -120,7 +150,9 @@ await page.waitForFunction(() =>
   ),
 );
 const impact = await page.evaluate(() => {
-  const s = window.__soundSources.find((s) => !s.loop);
+  const s = window.__soundSources.find(
+    (s) => !s.loop && s.buffer?.duration > 1.2 && s.buffer.duration < 1.4,
+  );
   return { gain: s.__output.gain.value, state: s.context.state };
 });
 assert.equal(impact.state, "running");
@@ -160,6 +192,8 @@ console.log({
   mute: true,
   volumePersistence: true,
   localFonts: true,
+  facilityEffectsDecoded: true,
+  environmentalEffectsStopOnPause: true,
   impactDecodedAndVolumeApplied: true,
 });
 await browser.close();

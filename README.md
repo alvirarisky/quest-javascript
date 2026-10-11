@@ -106,3 +106,15 @@ Horror direction uses Alien: Isolation as a reference for industrial atmosphere,
 Wrong answers now interrupt the terminal with a short signal failure, close-range Watcher lunge and dark aftermath. CCTV, corridor and capture scares use different anticipation delays. Movement and threat updates stop during the world scare, and opening an overlay cancels it. Reduced scares or reduced motion use the quiet feedback path. The original impact/breath sting is reproducible with `python3 scripts/generate-scare.py`, respects mute/volume, and varies its pitch slightly between attacks.
 
 Players choose Horror (full jumpscares) or Tenang (no jumpscares) in the opening guide and can change it from pause. Mode is remembered on this device; puzzles and scoring are identical in both modes.
+
+Players can choose MC cewek or MC cowok in the operator registration form. The selector presents industrial personnel ID cards using portraits from the actual six-pose game sprites, which were derived from the supplied photographs. Choice is stored with the local run and restored after reload; older runs use the male protagonist. A new shift can select a different MC without restarting the browser. `node tests/characters.mjs` covers both selections, live sprite/animation, transparent frame layout, resume, same-scene switching and legacy compatibility.
+
+## Story, facility audio and downloadable reports
+
+The opening scans Allie's (20050730) or Noah's (20041108) personnel card and opens the facility door. It remains skippable and supports reduced motion. Each MC has distinct short room/task comments. Radio transmissions become suspicious deeper in the facility; the MC responds with safe environmental guidance. Captions pause with the world and are queued briefly rather than displayed as permanent HUD text.
+
+Each restored terminal leaves a room-specific visual trace: control signal bars, generator core, CCTV indicators, security route lights, lab indicators, robot spotlight, surveillance carrier rings and EXIT lighting. The four ending presentations depend on the server-verified correct-answer count and include different MC closing lines and facility lighting.
+
+Ten additional original facility sound effects (steps, door, generator, radio static, knocks, pipe resonance, steam, robot servo, scanner, breath-like whisper) are generated with `python3 scripts/generate-effects.py`. Sound obeys mute/volume, limits overlap, adds stereo direction to distant sounds and stops during overlays. Tenang suppresses close-up scares and the whisper cue; the established exploration/challenges remain.
+
+The result's **UNDUH LAPORAN PNG** button exports a complete 1200px-wide image with character/ID, student identity, grade, completion time, ending, essay and all eight learning notes. Height grows to fit content, including long identities/essays; file naming follows `QJS_NIM_NamaLengkap.png`. `node tests/cinematic.mjs` verifies the actual browser download and report bounds.

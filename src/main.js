@@ -4,6 +4,15 @@ import { api } from "./services/api.js";
 import { reflectionPrompt, lessons } from "./game/learning.js";
 import { worldState } from "./game/missions.js";
 import { Soundscape } from "./game/soundscape.js";
+import {
+  operators,
+  operator,
+  entryLines,
+  recoveryLine,
+  taskLine,
+  endingFor,
+} from "./game/story.js";
+import { downloadReport } from "./game/report.js";
 import "./style.css";
 const ui = document.querySelector("#ui");
 const KEY = "null07-run";
@@ -62,9 +71,65 @@ function save() {
       localStorage.setItem(KEY, JSON.stringify(run));
     } catch {}
 }
+let dialogueTimer = null,
+  activeDialogue = null;
+const dialogueQueue = [];
+let recordPromise = null,
+  recordToken = null;
+function verifiedResult() {
+  if (recordToken !== run.token || !recordPromise) {
+    recordToken = run.token;
+    recordPromise = api("result", { token: run.token }).catch((error) => {
+      recordPromise = null;
+      throw error;
+    });
+  }
+  return recordPromise;
+}
+function stopDialogue() {
+  clearTimeout(dialogueTimer);
+  document.querySelector(".radio-caption")?.remove();
+  if (activeDialogue) dialogueQueue.unshift(activeDialogue);
+  activeDialogue = null;
+}
+function playDialogue() {
+  if (overlay || activeDialogue || !dialogueQueue.length || scene?.ending)
+    return;
+  activeDialogue = dialogueQueue.shift();
+  const line = activeDialogue;
+  const el = document.createElement("aside");
+  el.className = "radio-caption" + (line.suspicious ? " suspicious" : "");
+  el.setAttribute("role", "status");
+  el.innerHTML = `<span>${esc(line.speaker)}</span><p>${esc(line.text)}</p>`;
+  ui.append(el);
+  if (line.sound) tone(line.sound);
+  dialogueTimer = setTimeout(
+    () => {
+      el.remove();
+      activeDialogue = null;
+      playDialogue();
+    },
+    line.sound ? 5600 : 4300,
+  );
+}
+function storyEvent(key, lines) {
+  if (!run) return;
+  const heard = Array.isArray(run.storyHeard)
+    ? run.storyHeard.filter((x) => typeof x === "string").slice(0, 40)
+    : [];
+  if (heard.includes(key)) return;
+  run.storyHeard = [...heard, key];
+  save();
+  dialogueQueue.push(...lines.filter(Boolean));
+  // Keep recent story beats close to their actual room instead of accumulating stale radio calls.
+  if (dialogueQueue.length > 4)
+    dialogueQueue.splice(0, dialogueQueue.length - 4);
+  playDialogue();
+}
 function tone(kind) {
   if (!soundOn) return;
-  if (kind === "scare" && ambience.impact()) return;
+  if (kind === "whisper" && (reduceScares || reduced)) return;
+  if (ambience.play(kind)) return;
   try {
     ctx ||= new AudioContext();
     ctx.resume();
@@ -96,6 +161,8 @@ function tone(kind) {
 }
 function shell(content, cls = "") {
   document.querySelector(".toast")?.remove();
+  stopDialogue();
+  ambience.stopEffects(true);
   overlay = true;
   if (scene) {
     scene.cancelScare?.();
@@ -184,6 +251,7 @@ function hud() {
     scene.refreshTasks();
   }
   syncAmbience();
+  playDialogue();
 }
 function landing() {
   shell(
@@ -196,9 +264,19 @@ function landing() {
   };
   document.querySelector("#new")?.addEventListener("click", briefing);
 }
+function characterChoices() {
+  return `<fieldset class="character-choices"><legend>PILIH MC</legend><div class="character-options">${Object.entries(
+    operators,
+  )
+    .map(
+      ([id, mc]) =>
+        `<label class="character-card"><input type="radio" name="character" value="${id}" ${id === "male" ? "checked" : ""} required><div class="character-card-header">NULL—07 <span>PERSONNEL ID</span></div><div class="character-card-body"><div class="character-portrait" role="img" aria-label="Potret karakter ${mc.name}" style="--sprite: url('/assets/characters/${id}-sprite.png')"></div><div class="character-card-info"><small>ID ${mc.number}</small><strong>${mc.name}</strong><span>${mc.role}</span><div class="character-barcode" aria-hidden="true"></div></div></div><div class="character-card-footer"><span>ACCESS LEVEL 01</span><span class="character-state"></span></div></label>`,
+    )
+    .join("")}</div></fieldset>`;
+}
 function identity() {
   shell(
-    `<div class="panel registration"><div class="panel-top"><span>PERSONNEL TERMINAL</span><span>NULL-07</span></div><h2>Data operator.</h2><form id="identity"><label>Nama Lengkap<input name="name" required maxlength="80" autocomplete="name" placeholder="Nama lengkap"></label><div class="form-row"><label>NIM<input name="nim" required maxlength="80" placeholder="Nomor induk mahasiswa"></label><label>Kelas<input name="kelas" required maxlength="80" placeholder="Contoh: TI-24-XX"></label></div><p id="error" role="alert"></p><button class="primary" type="submit">MASUK <span>→</span></button></form><button class="text-button" id="back">← KEMBALI</button><div class="fine">Jawaban pertama dinilai. Jawaban salah tetap bisa diperbaiki.</div></div>`,
+    `<div class="panel registration"><div class="panel-top"><span>PERSONNEL TERMINAL</span><span>NULL-07</span></div><h2>Data operator.</h2><form id="identity"><label>Nama Lengkap<input name="name" required maxlength="80" autocomplete="name" placeholder="Nama lengkap"></label><div class="form-row"><label>NIM<input name="nim" required maxlength="80" placeholder="Nomor induk mahasiswa"></label><label>Kelas<input name="kelas" required maxlength="80" placeholder="Contoh: TI-24-XX"></label></div>${characterChoices()}<p id="error" role="alert"></p><button class="primary" type="submit">MASUK <span>→</span></button></form><button class="text-button" id="back">← KEMBALI</button><div class="fine">Jawaban pertama dinilai. Jawaban salah tetap bisa diperbaiki.</div></div>`,
   );
   document.querySelector("#back").onclick = landing;
   document.querySelector("#identity").onsubmit = (e) => {
@@ -245,12 +323,14 @@ function reflection(data, value = "") {
           ...data,
           reflection: document.querySelector("#essay").value.trim(),
         })),
+        character: data.character === "female" ? "female" : "male",
         x: 180,
         world: worldState(null),
         escaped: false,
         introSeen: false,
       };
       pending = null;
+      dialogueQueue.length = 0;
       save();
       opening();
     } catch (err) {
@@ -260,23 +340,17 @@ function reflection(data, value = "") {
   };
 }
 function opening(beat = 0) {
-  const beats = [
-    [
-      "03:00 AM",
-      "Shift terakhir.",
-      "Kamu operator yang masih berjaga di NULL-07. Koridor kosong. Radio baru saja berhenti berbunyi.",
-    ],
-    [
-      "TRANSMISI DARURAT",
-      "Ada yang ikut terbangun.",
-      "Listrik terputus. Delapan sistem terkunci. Pulihkan terminal, baca tanda bahaya, dan cari EXIT-07.",
-    ],
-  ];
-  const [time, title, copy] = beats[beat];
+  const character = run.character === "female" ? "female" : "male",
+    mc = operator(character);
+  const quote =
+    character === "female"
+      ? "Satu shift lagi. Aku cuma perlu menjaga sistem tetap hidup."
+      : "Cek pintu, cek radio. Seharusnya malam ini seperti biasa.";
   shell(
-    `<section class="opening"><span class="overline">${time}</span><h2>${title}</h2><p>${copy}</p><button class="primary" id="intro-next">${beat ? "MASUK FASILITAS" : "LANJUTKAN"} →</button><button class="text-button" id="intro-skip">LEWATI OPENING</button></section>`,
+    `<section class="opening cinematic-opening ${beat ? "door-authorized" : ""}"><div class="scanner-rig"><div class="scanner-door"></div><div class="scanner-card"><span class="scanner-label">NULL—07 / PERSONNEL ID</span><div class="scanner-personnel"><div class="character-portrait" style="--sprite: url('/assets/characters/${character}-sprite.png'); --portrait-offset: ${character === "female" ? "142px" : "165px"}" role="img" aria-label="${mc.name}"></div><div><strong>${mc.name}</strong><small>${mc.role}</small><span>ID ${mc.number}</span></div></div><div class="scan-beam"></div></div><div class="scanner-status">${beat ? "AKSES DITERIMA / PINTU TERBUKA" : "MEMINDAI KARTU OPERATOR"}</div></div><span class="overline">${beat ? "TRANSMISI DARURAT" : "03:00 AM"}</span><h2>${beat ? "Ada yang ikut terbangun." : "Shift terakhir."}</h2><p>${beat ? "Delapan sistem terkunci. Radio memintamu masuk. Pulihkan terminal dan temukan EXIT-07." : `${mc.name}: “${quote}”`}</p><button class="primary" id="intro-next">${beat ? "MASUK FASILITAS" : "MASUKKAN KARTU"} →</button><button class="text-button" id="intro-skip">LEWATI OPENING</button></section>`,
     "opening-veil",
   );
+  tone(beat ? "door" : "scan");
   const finish = () => {
     run.introSeen = true;
     save();
@@ -284,10 +358,7 @@ function opening(beat = 0) {
   };
   document.querySelector("#intro-next").onclick = beat
     ? finish
-    : () => {
-        tone("haunt");
-        opening(1);
-      };
+    : () => opening(1);
   document.querySelector("#intro-skip").onclick = finish;
 }
 
@@ -310,6 +381,7 @@ async function enter() {
   run.world = worldState(run.world, run.progress);
   save();
   if (scene) {
+    scene.selectCharacter();
     scene.applyProgress();
     scene.restore(run.x);
     scene.ending = false;
@@ -342,6 +414,7 @@ async function enter() {
         hud();
       },
       progress: () => run?.progress || 0,
+      character: () => (run?.character === "female" ? "female" : "male"),
       reduced: () => reduced,
       scary: () => !reduceScares && !reduced,
       worldState: () => run.world,
@@ -378,20 +451,35 @@ async function enter() {
             : `SENTER ${light ? "ON" : "OFF"} · NAPAS ${Math.round(stamina * 100)}%`;
       },
       sound: tone,
+      recovered: (room) =>
+        storyEvent(`recovered:${room}`, [recoveryLine(room, run.character)]),
+      taskDone: (id) => storyEvent(`task:${id}`, [taskLine(id, run.character)]),
       loading: (n) => {
         const el = document.querySelector("#load-progress");
         if (el) el.textContent = "Memuat " + Math.round(n * 100) + "%";
       },
       ending: () => {
+        stopDialogue();
+        dialogueQueue.length = 0;
         document.querySelector(".room-caption")?.remove();
         document.querySelector(".hud")?.remove();
         const el = document.createElement("div");
         el.className = "ending-caption";
-        el.innerHTML = "<span>06:00 AM</span><p>SHIFT COMPLETED</p>";
+        el.innerHTML = "<span>06:00 AM</span><p>EXIT VERIFIED</p>";
         ui.append(el);
+        tone("door");
+        verifiedResult()
+          .then((result) => {
+            if (!el.isConnected) return;
+            const end = endingFor(result.correct, run.character);
+            scene.setEndingStyle(end);
+            el.innerHTML = `<span>06:00 AM / ${esc(end.facility)}</span><p>${esc(end.title)}</p><small>${esc(end.speaker)}: ${esc(end.copy)}</small>`;
+          })
+          .catch(() => {});
       },
       room: (i) => {
         currentRoom = i;
+        storyEvent(`room:${i}`, entryLines(i, run.character));
         if (!overlay) {
           const label = document.querySelector("#room");
           label.textContent = rooms[i];
@@ -557,15 +645,30 @@ async function results() {
   save();
   shell('<div class="panel"><h2>Verifying shift record…</h2></div>');
   try {
-    const r = await api("result", { token: run.token });
+    const r = await verifiedResult();
+    const mc = operator(run.character),
+      end = endingFor(r.correct, run.character);
     const mins = Math.floor((r.completed - r.started) / 60000),
       seconds = Math.floor((r.completed - r.started) / 1000) % 60;
-    const info = `Nama: ${r.identity.name}\nNIM: ${r.identity.nim}\nKelas: ${r.identity.kelas}\nCorrect: ${r.correct}/8\nNilai: ${r.score}\nStatus: COMPLETE\nCompletion: ${mins}m ${seconds}s\nJulukan: ${r.rank}\n\nRefleksi awal: ${r.reflection || "Tidak tersedia pada sesi lama."}\n\nCatatan belajar:\n${lessons.map(([title, copy], i) => `${title}: ${r.outcomes?.[i] ? "Jawaban pertama tepat" : "Tinjau kembali"}. ${copy}`).join("\n")}`;
+    const info = `Nama: ${r.identity.name}\nNIM: ${r.identity.nim}\nKelas: ${r.identity.kelas}\nCorrect: ${r.correct}/8\nNilai: ${r.score}\nStatus: COMPLETE\nCompletion: ${mins}m ${seconds}s\nJulukan: ${r.rank}\nMC: ${mc.name} — ${mc.role}\nID MC: ${mc.number}\nEnding: ${end.title}\n\nRefleksi awal: ${r.reflection || "Tidak tersedia pada sesi lama."}\n\nCatatan belajar:\n${lessons.map(([title, copy], i) => `${title}: ${r.outcomes?.[i] ? "Jawaban pertama tepat" : "Tinjau kembali"}. ${copy}`).join("\n")}`;
     shell(
-      `<section class="panel result shift-record"><div class="record-header"><span>NULL—07 / ARSIP OPERATOR</span><span>06:00 AM</span></div><div class="record-heading"><div><p class="overline">SHIFT SELESAI</p><h2>Kamu berhasil<br>keluar.</h2></div><div class="record-stamp">EXIT<br>VERIFIED</div></div><div class="result-body"><div class="identity-result"><label>NAMA<strong>${esc(r.identity.name)}</strong></label><div class="form-row"><label>NIM<strong>${esc(r.identity.nim)}</strong></label><label>KELAS<strong>${esc(r.identity.kelas)}</strong></label></div><div class="record-status"><span>COMPLETE</span><span>${mins}m ${seconds}s</span></div></div><div class="score"><small>NILAI AKHIR</small><strong>${r.score}<span>/100</span></strong><p class="answer-count">${r.correct} / 8 JAWABAN PERTAMA TEPAT</p><div class="rank">${esc(r.rank)}</div><p class="rank-description">${esc(r.rankDescription || "")}</p></div></div><section class="record-reflection"><div class="record-section-label"><span>01 / CATATAN SEBELUM SHIFT</span></div><blockquote class="essay-result">${esc(r.reflection || "Sesi lama ini belum memiliki esai awal.")}</blockquote><p class="reflection-question">${esc(reflectionPrompt)}</p></section><details class="learning-record"><summary>02 / CATATAN BELAJAR · JAVASCRIPT & JQUERY</summary><div class="lesson-list">${lessons.map(([title, copy], i) => `<article><div class="lesson-title"><strong>${esc(title)}</strong><span>${r.outcomes?.[i] ? "✓ TEPAT" : "↻ TINJAU"}</span></div><p>${esc(copy)}</p></article>`).join("")}</div></details><div class="actions"><button class="primary" id="again">SHIFT BARU ↻</button><button id="copy">SALIN HASIL</button></div><p id="error" role="status"></p></section>`,
+      `<section class="panel result shift-record"><div class="record-header"><span>NULL—07 / ${esc(mc.name)} / ID ${mc.number}</span><span>06:00 AM</span></div><div class="record-heading"><div><p class="overline">SHIFT SELESAI</p><h2>Kamu berhasil<br>keluar.</h2></div><div class="record-stamp">EXIT<br>VERIFIED</div></div><div class="result-body"><div class="identity-result"><label>NAMA<strong>${esc(r.identity.name)}</strong></label><div class="form-row"><label>NIM<strong>${esc(r.identity.nim)}</strong></label><label>KELAS<strong>${esc(r.identity.kelas)}</strong></label></div><div class="record-status"><span>COMPLETE</span><span>${mins}m ${seconds}s</span></div></div><div class="score"><small>NILAI AKHIR</small><strong>${r.score}<span>/100</span></strong><p class="answer-count">${r.correct} / 8 JAWABAN PERTAMA TEPAT</p><div class="rank">${esc(r.rank)}</div><p class="rank-description">${esc(r.rankDescription || "")}</p></div></div><section class="record-ending" data-ending="${end.tier}"><strong>${esc(end.title)}</strong><p>${esc(mc.name)}: ${esc(end.copy)}</p><span>${esc(end.facility)}</span></section><section class="record-reflection"><div class="record-section-label"><span>01 / CATATAN SEBELUM SHIFT</span></div><blockquote class="essay-result">${esc(r.reflection || "Sesi lama ini belum memiliki esai awal.")}</blockquote><p class="reflection-question">${esc(reflectionPrompt)}</p></section><details class="learning-record"><summary>02 / CATATAN BELAJAR · JAVASCRIPT & JQUERY</summary><div class="lesson-list">${lessons.map(([title, copy], i) => `<article><div class="lesson-title"><strong>${esc(title)}</strong><span>${r.outcomes?.[i] ? "✓ TEPAT" : "↻ TINJAU"}</span></div><p>${esc(copy)}</p></article>`).join("")}</div></details><div class="actions"><button class="primary" id="again">SHIFT BARU ↻</button><button id="copy">SALIN HASIL</button><button id="download">UNDUH LAPORAN PNG ↓</button></div><p id="error" role="status"></p></section>`,
       "record-veil",
     );
     document.querySelector("#again").onclick = briefing;
+    document.querySelector("#download").onclick = async (event) => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      try {
+        await downloadReport(r, run.character);
+        document.querySelector("#error").textContent =
+          "Laporan berhasil diunduh.";
+      } catch (error) {
+        alertError(error);
+      } finally {
+        if (button.isConnected) button.disabled = false;
+      }
+    };
     document.querySelector("#copy").onclick = async () => {
       try {
         await navigator.clipboard.writeText(info);

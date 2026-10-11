@@ -92,3 +92,30 @@ Validated revision results:
 - Opening guide and pause menu now offer Horror (full jumpscares) or Tenang (no jumpscares), using accessible radio choices. Existing reduced-scare preferences migrate through the same stored setting. Switching mode retains the same assessment and progression.
 - Removed the three requested result labels while preserving the initial essay beside the grade in the same record.
 - Chrome QA verified mode selection in the guide, pause-menu switching, persistence through reload, scary/quiet wrong-answer behavior, result copy removal, essay integrity and the existing pause/hold task behavior. Production build and bundle audit passed.
+
+## Selectable MCs from user photographs
+
+- Operator registration now includes keyboard-accessible female/male MC choices with the two supplied photos. Selection changes the actual player sprite and persists with the local run.
+- Both generated sprite sheets have six 512×512 frames. Verified walking motion/frame switching, alpha backgrounds, restoring a female run, selecting male in a subsequent shift in the same scene, and old sessions without the new field. Character changes preserve the existing collision body dimensions.
+- Reviewed the selection screen at 1366×768 and both protagonists in the facility. Screenshots are in `docs/screenshots/characters/`.
+- Character browser checks passed with zero browser errors. 13 automated groups, production build and private bundle audit passed; the existing Phaser chunk-size warning remains.
+- Full browser playthrough with the new male MC passed all eight assessments, environmental tasks and EXIT, with zero browser errors. 3/8 first answers yielded 37.5/100; all three desktop result viewports and starting another shift passed.
+
+## Character ID card selector
+
+- Replaced uploaded-photo thumbnails with personnel ID cards using cropped idle-frame portraits from the actual game character sheets. Cards show operator number, night-shift assignment, barcode, access level and selected state.
+- Removed unused original-photo files from public assets. Character selection, animation, resume, same-scene switching and legacy compatibility passed Chrome QA with zero browser errors.
+- Reviewed final desktop portrait crops and verified the cards fit the 390px mobile viewport. Updated selection screenshots in `docs/screenshots/characters/`.
+- Final production build and private bundle audit passed.
+- Updated the ID cards with the user-selected names: Allie (Teknisi Sistem) and Noah (Operator Keamanan). Verified both names, roles and radio selections in Chrome, reviewed the desktop screenshot, and passed the production build.
+
+## Cinematic opening, radio story and facility recovery
+
+- Applied the final user-specified personnel IDs everywhere: Allie / Teknisi Sistem / 20050730 and Noah / Operator Keamanan / 20041108. Character portraits use generated game sprites.
+- Opening animates the selected ID through a scanner and opens the facility door. Both protagonists have distinct short replies; radio instructions become suspicious as the shift progresses. Subtitles sit above the play area, disappear on pause, and resume afterward.
+- Each recovered sector activates its own lights and visual equipment feedback. Four endings use the server-verified correct-answer count; environmental tasks and personal essays retain their previous scoring rules.
+- Added ten original, reproducible sound effects: footsteps, door, machinery, radio, knocks, pipes, steam, robot, scanner and breath. Chrome decoded all twelve audio buffers (ten new clips, impact and ambience). Effects stop on pause; ambience fades, mute/volume persist, and impact uses the selected volume. Tenang suppresses jumpscares and breath cues.
+- Actual PNG download passed in Chrome. The report includes student identity, selected MC and ID, grade, completion time, ending, full essay and all eight learning notes. Long 80-character identities and a 600-character unbroken essay wrap without clipping the footer. Reviewed images are under `docs/screenshots/story/`.
+- Cinematic, character, onboarding and audio browser checks passed with zero page errors. The character/cinematic test hooks resolve Vite's active world-module URL, including HMR timestamps.
+- Full browser playthrough passed all eight assessments, environmental tasks and EXIT. Three correct first answers produced 37.5/100 and the matching ending; the result fit 1366×768, 1440×900 and 1536×960. Starting a subsequent shift worked.
+- Fifteen automated test groups, production build and private bundle audit passed. The existing Phaser chunk-size warning remains.
